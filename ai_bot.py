@@ -59,7 +59,7 @@ def get_ai_response(sender, text):
         response_text = "会話をリセットしました。"
     elif "完璧" in text:
         conversation.append({"role": "user", "content": text})
-        conversation.append({"role": "assistant", "content": "完璧なんてありません。"})
+        conversation.append({"role": "assistant", "content": "じゃーん！"})
         response_text = "じゃーん！"
     else:
         conversation.append({"role": "user", "content": text})
