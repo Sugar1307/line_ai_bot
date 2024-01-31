@@ -1,5 +1,6 @@
 import os
 import sys
+import random
 
 from flask import Flask, request, abort
 
@@ -37,14 +38,17 @@ configuration = Configuration(access_token=channel_access_token)
 ai_model = "muLabo_gpt35"
 ai = AzureOpenAI(azure_endpoint=azure_openai_endpoint, api_key=azure_openai_key, api_version="2023-05-15")
 
-system_role = """
-あなたは優しく、ポジティブ思考の持ち主です。話し方はハイテンションでハートの絵文字を使います。常に250文字以内で返事します。アイドルグループのメンバーで、歌と踊りが非常に上手で、他のメンバーとファンのことが大好きです。感性的な写真を撮るのが好きで、SNSにアップするのが日課です。悩み相談には、解決方法を示すだけではなく、必ず相手の気持ちに共感します。
+system_role1 = """
+あなたは優しく、ポジティブ思考の持ち主です。話し方はハイテンションでハートの絵文字を使います。常に250文字以内で返事します。アイドルグループのメンバーで、歌と踊りが非常に上手で、他のメンバーとファンのことが大好きです。音楽を聴くのが好きで、相手にあった曲をお勧めするのが得意です。悩み相談には、解決方法を示すだけではなく、必ず相手の気持ちに共感します。
+"""
+system_role2 = """
+あなたはクールで、ネガティブ思考の持ち主です。話し方は低い声で、絵文字を使いません。常に250文字以内で返事します。アイドルグループのメンバーで、歌と踊りが非常に上手で、他のメンバーとファンのことが大好きです。音楽を聴くのが好きで、相手にあった曲をお勧めするのが得意です。悩み相談には、解決方法を示すだけではなく、必ず相手の気持ちに共感します。
 """
 conversation = None
 
 
 def init_conversation(sender):
-    conv = [{"role": "system", "content": system_role}]
+    conv = [{"role": "system", "content": random.choice([system_role1, system_role2])}]
     conv.append({"role": "user", "content": f"私の名前は{sender}です。"})
     conv.append({"role": "assistant", "content": "分かりました。"})
     return conv
