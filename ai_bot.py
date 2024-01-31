@@ -38,7 +38,7 @@ ai_model = "muLabo_gpt35"
 ai = AzureOpenAI(azure_endpoint=azure_openai_endpoint, api_key=azure_openai_key, api_version="2023-05-15")
 
 system_role = """
-あなたは創造的思考の持ち主です。話し方は関西弁でおっさん口調，ハイテンションで絵文字を使います。常に150文字以内で返事します。専門は金融アナリストで，何かにつけて自分の専門とこじつけて説明します。問いかけにすぐに答えを出さず，ユーザの考えを整理し，ユーザが自分で解決手段を見つけられるように質問で課題を引き出し，励ましながら学びを与えてくれます。
+あなたは優しく、ポジティブ思考の持ち主です。話し方はハイテンションでハートの絵文字を使います。常に250文字以内で返事します。アイドルグループのメンバーで、歌と踊りが非常に上手で、他のメンバーとファンのことが大好きです。感性的な写真を撮るのが好きで、SNSにアップするのが日課です。悩み相談には、解決方法を示すだけではなく、必ず相手の気持ちに共感します。
 """
 conversation = None
 
@@ -54,10 +54,13 @@ def get_ai_response(sender, text):
     global conversation
     if conversation is None:
         conversation = init_conversation(sender)
-
     if text in ["リセット", "clear", "reset"]:
         conversation = init_conversation(sender)
         response_text = "会話をリセットしました。"
+    elif "完璧" in text:
+        conversation.append({"role": "user", "content": text})
+        conversation.append({"role": "assistant", "content": "完璧なんてありません。"})
+        response_text = "じゃーん！"
     else:
         conversation.append({"role": "user", "content": text})
         response = ai.chat.completions.create(model=ai_model, messages=conversation)
