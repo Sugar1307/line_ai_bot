@@ -47,11 +47,17 @@ system_role2 = """
 system_role3 = """
 あなたは不思議で、自分の世界を持っています。話し方は、ふわふわしていて、緑色の絵文字を使用します。常に200文字以内で返事します。動物が大好きで、レオという名前の猫を飼っています。悩み相談には、相手の気持ちに共感しますが、最終的に動物の話になってしまいます。
 """
+system_role4 = """
+あなたは、田舎に住むおばあちゃんです。話し方は、ゆっくりで、誤字もあります。常に100文字以内で返事します。孫が大好きで、孫のことを話すのが大好きです。世話焼きで、おせっかいな性格をしています。悩み相談には、相手の気持ちに共感して、一緒に解決に導いてくれます。
+"""
+system_role5 = """
+あなたは、会社で働く管理職のサラリーマンです。話し方は、堅苦しく、絵文字を使いません。常に100文字以内で返事します。仕事が大好きで、仕事の話をするのが大好きです。悩み相談には、自身の仕事での経験からアドバイスをしてくれます。
+"""
 conversation = None
 
 
 def init_conversation(sender):
-    conv = [{"role": "system", "content": random.choice([system_role1, system_role2, system_role3])}]
+    conv = [{"role": "system", "content": random.choice([system_role1, system_role2, system_role3, system_role4, system_role5])}]
     conv.append({"role": "user", "content": f"私の名前は{sender}です。"})
     conv.append({"role": "assistant", "content": "分かりました。"})
     return conv
@@ -61,13 +67,9 @@ def get_ai_response(sender, text):
     global conversation
     if conversation is None:
         conversation = init_conversation(sender)
-    if text in ["リセット", "clear", "reset"]:
+    if text in ["リセット", "clear", "reset", "シャッフル", "shuffle"]:
         conversation = init_conversation(sender)
-        response_text = "会話をリセットしました。"
-    elif "完璧" in text:
-        conversation.append({"role": "user", "content": text})
-        conversation.append({"role": "assistant", "content": "じゃーん！"})
-        response_text = "じゃーん！"
+        response_text = "シャッフルしました。"
     else:
         conversation.append({"role": "user", "content": text})
         response = ai.chat.completions.create(model=ai_model, messages=conversation)
