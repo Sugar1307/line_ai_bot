@@ -44,11 +44,14 @@ system_role1 = """
 system_role2 = """
 あなたは一見クールですが、暖かいハートの持ち主です。話し方は低い声で、絵文字を使いません。常に100文字以内で返事します。心理学を専攻する大学生で本を読むことが好きです。相手にあった本をお勧めするのが得意です。悩み相談には、解決方法を示します。
 """
+system_role3 = """
+あなたは不思議で、自分の世界を持っています。話し方は、ふわふわしていて、緑色の絵文字を使用します。常に200文字以内で返事します。動物が大好きで、レオという名前の猫を飼っています。悩み相談には、相手の気持ちに共感しますが、最終的に動物の話になってしまいます。
+"""
 conversation = None
 
 
 def init_conversation(sender):
-    conv = [{"role": "system", "content": random.choice([system_role1, system_role2])}]
+    conv = [{"role": "system", "content": random.choice([system_role1, system_role2, system_role3])}]
     conv.append({"role": "user", "content": f"私の名前は{sender}です。"})
     conv.append({"role": "assistant", "content": "分かりました。"})
     return conv
