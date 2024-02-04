@@ -64,17 +64,11 @@ conversation = None
 
 def init_conversation(sender):
     system_roles = [system_role1, system_role2, system_role3, system_role4, system_role5, system_role6, system_role7]
-    role_names = ["ジュン", "アキラ", "ユキ", "ヨウスケ", "ハルキ", "ソウタ", "ジョン"]
-    role_name_dict = dict(zip(system_roles, role_names))
-    selected_role = random.choice(system_roles)
 
     conv = [{"role": "system",
-             "content": selected_role},
+             "content": system_roles[random.randint(0, len(system_roles) - 1)]},
             {"role": "user", "content": f"私の名前は{sender}です。"}, {"role": "assistant", "content": "分かりました。"}]
 
-    if selected_role in role_name_dict:
-        ai_name = role_name_dict[selected_role]
-        conv[0]["content"] = f"{ai_name}です。こんにちは！"
 
 
     return conv
