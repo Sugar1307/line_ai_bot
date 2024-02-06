@@ -100,9 +100,11 @@ def get_ai_response(sender, text):
     if not conversation:
         conversation = init_conversation(sender, text)
     if text.lower() in ["リセット", "clear", "reset", "シャッフル", "shuffle"]:
-        conversation = init_conversation(sender, text)
-        response_text = "シャッフルしました。"
+        conversation = None  # リセット時に会話をクリアする
+        response_text = "シャッフルしました。新しいロールを選択してください。"
     else:
+        if conversation is None:  # 会話がない場合は初期化
+            conversation = init_conversation(sender, text)
         conversation.append({"role": "user", "content": text})
         response = ai.chat.completions.create(model=ai_model, messages=conversation)
         response_text = response.choices[0].message.content
@@ -122,7 +124,6 @@ def init_conversation(sender_name, text):
             {"role": "user", "content": f"私の名前は{sender_name}です。"},
             {"role": "assistant", "content": "分かりました。"}]
     return conv
-
 
 @app.route("/callback", methods=["POST"])
 def callback():
