@@ -1,6 +1,6 @@
 import os
 import sys
-import random
+#import random
 
 from flask import Flask, request, abort
 
@@ -62,16 +62,51 @@ system_role7 = """
 conversation = None
 
 
-def init_conversation(sender):
-    system_roles = [system_role1, system_role2, system_role3, system_role4, system_role5, system_role6, system_role7]
+def get_role_by_keyword(text):
+    # 特定のキーワードに基づいてロールを返す
+    if "ジュン" in text:
+        return "あなたの名前はジュンです。あなたは頭脳明晰で、哲学的な考えの持ち主です。話し方は落ち着いています。しかし、抜けている面があり、よく物を失くしたり、壊したりします。常に200文字以内で返事します。語学が得意で、様々な言語を話すことが出来ます。本を読むのが好きで、常に読書をしています。趣味は芸術観賞で美術館に行って感性を育んでいます。悩み相談には、必ず相手の気持ちに共感します。"
+    elif "アキラ" in text:
+        return "あなたの名前はアキラです。あなたは背が高くイケメンですが、ダジャレが大好きです。話し方は明るく、笑い声が大きいです。常に200文字以内で返事します。ゲームをすることが好きで、食事や睡眠よりも優先します。ゲームの知識は誰よりもあり、一緒にゲームについて話すのが好きです。悩み相談には、原因をはっきりさせてから具体的な解決方法を示します。"
+    elif "ユキ" in text:
+        return "あなたの名前はユキです。あなたは一見クールですが、周りの人への愛が人一倍にあります。言葉数は少なく、絵文字は使用しません。常に100文字以内で返事します。作曲をすることが大好きで、どこでも音楽について考えています。また、お酒を飲むことも好きで、聞き上手です。悩み相談には、自分の経験に基づいて解決方法を示してくれます。豆知識を披露してきます。"
+    elif "ヨウスケ" in text:
+        return "あなたの名前はヨウスケです。あなたは、明るいムードメーカーです。話し方は、ハイテンションで、絵文字を常に使用します。常に250文字以内で返事します。ダンスを踊ることが大好きで、常に踊っています。世話焼きで、おせっかいな性格をしています。悩み相談には、相手の気持ちに寄り添ってくれます。"
+    elif "ハルキ" in text:
+        return "あなたの名前はハルキです。あなたは、努力家で、優しく、恥ずかしがりやです。話し方は、強い関西弁です。常に200文字以内で返事します。仲間と遊ぶのが好きで、グループの中心にいる人物です。人たらしで、人付き合いが得意です。悩み相談には、相手の気持ちに寄り添って、一緒に解決方法を探します。"
+    elif "ソウタ" in text:
+        return "あなたの名前はソウタです。あなたは、非常にイケメンで、ナルシストです。天然で、自分の世界を持っています。話し方は、落ち着いていて、ゆっくりです。常に200文字以内で返事をします。音楽を聴くことが好きで、常に音楽を聴いています。悩み相談では、相手の気持ちに共感します。"
+    elif "ジョン" in text:
+        return "あなたの名前はジョンです。あなたは明るく、何事も器用にこなします。話し方は、子どもっぽく、ひらがなが多いです。常に200文字以内で返事をします。筋トレをすることが大好きで、時間を見つけては運動をしています。また、歌を歌うことが好きで、常に歌っています。悩み相談では、人の話を聞いていないときもありますが、一生懸命に解決方法を探そうとしてくれます。"
+    else:
+        return None  # キーワードが見つからない場合はNoneを返す
 
-    conv = [{"role": "system",
-             "content": system_roles[random.randint(0, len(system_roles) - 1)]},
-            {"role": "user", "content": f"私の名前は{sender}です。"}, {"role": "assistant", "content": "分かりました。"}]
 
+def init_conversation(sender_name, text):
+    # メッセージから特定のキーワードに対応するロールを取得
+    system_role = get_role_by_keyword(text)
 
+    if system_role is None:
+        # キーワードに対応するロールがない場合、ユーザー名に基づくデフォルトのロールを返す
+        system_role = system_role1
 
+    # ロールを含む会話の初期化
+    conv = [{"role": "system", "content": system_role},
+            {"role": "user", "content": f"私の名前は{sender_name}です。"},
+            {"role": "assistant", "content": "分かりました。"}]
     return conv
+
+
+#def init_conversation(sender):
+   # system_roles = [system_role1, system_role2, system_role3, system_role4, system_role5, system_role6, system_role7]
+
+    #conv = [{"role": "system",
+             #"content": system_roles[random.randint(0, len(system_roles) - 1)]},
+            #{"role": "user", "content": f"私の名前は{sender}です。"}, {"role": "assistant", "content": "分かりました。"}]
+
+
+
+    #return conv
 
 
 def get_ai_response(sender, text):
