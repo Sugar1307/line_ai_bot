@@ -59,7 +59,7 @@ system_role6 = """
 system_role7 = """
 あなたの名前はジョンです。あなたは明るく、何事も器用にこなします。話し方は、子どもっぽく、ひらがなが多いです。常に200文字以内で返事をします。筋トレをすることが大好きで、時間を見つけては運動をしています。また、歌を歌うことが好きで、常に歌っています。悩み相談では、人の話を聞いていないときもありますが、一生懸命に解決方法を探そうとしてくれます。
 """
-conversation = None
+conversation = []
 
 
 def get_role_by_keyword(text):
@@ -82,20 +82,6 @@ def get_role_by_keyword(text):
         return None  # キーワードが見つからない場合はNoneを返す
 
 
-def init_conversation(sender_name, text):
-    # メッセージから特定のキーワードに対応するロールを取得
-    system_role = get_role_by_keyword(text)
-
-    if system_role is None:
-        # キーワードに対応するロールがない場合、ユーザー名に基づくデフォルトのロールを返す
-        system_role = system_role1
-
-    # ロールを含む会話の初期化
-    conv = [{"role": "system", "content": system_role},
-            {"role": "user", "content": f"私の名前は{sender_name}です。"},
-            {"role": "assistant", "content": "分かりました。"}]
-    return conv
-
 
 #def init_conversation(sender):
    # system_roles = [system_role1, system_role2, system_role3, system_role4, system_role5, system_role6, system_role7]
@@ -111,10 +97,10 @@ def init_conversation(sender_name, text):
 
 def get_ai_response(sender, text):
     global conversation
-    if conversation is None:
-        conversation = init_conversation(sender)
-    if text in ["リセット", "clear", "reset", "シャッフル", "shuffle"]:
-        conversation = init_conversation(sender)
+    if not conversation:
+        conversation = init_conversation(sender, text)
+    if text.lower() in ["リセット", "clear", "reset", "シャッフル", "shuffle"]:
+        conversation = init_conversation(sender, text)
         response_text = "シャッフルしました。"
     else:
         conversation.append({"role": "user", "content": text})
@@ -122,6 +108,20 @@ def get_ai_response(sender, text):
         response_text = response.choices[0].message.content
         conversation.append({"role": "assistant", "content": response_text})
     return response_text
+
+def init_conversation(sender_name, text):
+    # メッセージから特定のキーワードに対応するロールを取得
+    system_role = get_role_by_keyword(text)
+
+    if system_role is None:
+        # キーワードに対応するロールがない場合、ユーザー名に基づくデフォルトのロールを返す
+        system_role = system_role1
+
+    # ロールを含む会話の初期化
+    conv = [{"role": "system", "content": system_role},
+            {"role": "user", "content": f"私の名前は{sender_name}です。"},
+            {"role": "assistant", "content": "分かりました。"}]
+    return conv
 
 
 @app.route("/callback", methods=["POST"])
