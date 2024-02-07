@@ -71,6 +71,9 @@ def get_ai_response(sender, text):
     if text.lower() in ["チェンジ", "change"]:
         conversation = None  # リセット時に会話をクリアする
         response_text = "チェンジですね。新しいロールを選択してください。"
+    elif text.lower() in ["使い方", "help"]:
+        response_text = "使い方ですね。\n\n「チェンジ」または「change」でロールを変更できます。\n\nロールは以下の７つに対応しています。\n\nジュン、アキラ、ユキ、ヨウスケ、ハルキ、ソウタ、ジョン\n\n好みのロールを選択してくださいね。"
+
     else:
         if conversation is None:  # 会話がない場合は初期化
             conversation = init_conversation(sender, text)
