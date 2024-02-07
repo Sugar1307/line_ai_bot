@@ -43,7 +43,6 @@ system_role1 = """
 
 conversation = []
 
-
 def get_role_by_keyword(text):
     # 特定のキーワードに基づいてロールを返す
     if "ジュン" in text:
@@ -84,7 +83,7 @@ def init_conversation(sender_name, text):
     system_role = get_role_by_keyword(text)
 
     if system_role is None:
-        # キーワードに対応するロールがない場合、ユーザー名に基づくデフォルトのロールを返す
+        # キーワードに対応するロールがない場合、デフォルトのロールを返す
         system_role = system_role1
 
     # ロールを含む会話の初期化
@@ -110,7 +109,6 @@ def callback():
 
     return "OK"
 
-
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_text_message(event):
     text = event.message.text
@@ -132,7 +130,6 @@ def handle_text_message(event):
                     messages=[TextMessage(text="Received message: " + text)],
                 )
             )
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
