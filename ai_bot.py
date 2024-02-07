@@ -70,7 +70,7 @@ def get_ai_response(sender, text):
         conversation = init_conversation(sender, text)
     if text.lower() in ["チェンジ", "change"]:
         conversation = None  # リセット時に会話をクリアする
-        response_text = "チェンジですね。新しいロールを選択してください。"
+        response_text = "チェンジですね。新しい名前を入力してください。"
     else:
         if conversation is None:  # 会話がない場合は初期化
             conversation = init_conversation(sender, text)
